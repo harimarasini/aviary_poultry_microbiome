@@ -1,0 +1,38 @@
+#Lets create a parent directory for files and all analysis reports. Here, I'm creating a folder named "aviary_microbiome".
+
+mkdir aviary_microbiome
+
+#changing current directory.
+
+cd aviary_microbiome
+
+#We'll open our terminal and activate QIIME2. Be sure to check your qimme2 version.
+
+conda activate qiime2-amplicon-2025.10
+
+#We need to put raw files (FASTQ/FASTA) in a specific folder. Lets create a folder, named "1_raw" inside parent directory and assign it as current directory.
+
+mkdir 1_raw
+cd 1_raw
+
+#Now, let's import our raw files into QIIME 2 format and get QIIME 2 artifact containing the imported sequences. Please make sure if your raw sequenced files are single-end or paired-end. Nowadays, almost sequencing facilities provide paired-end files.
+#I'm using paired-end data, looking at phred qulaity scores and getting imported artifact file.
+
+qiime tools import \
+--type 'SampleData[PairedEndSequencesWithQuality]' \
+--input-format PairedEndFastqManifestPhred33V2 \
+--input-path manifestfile.txt \
+--output-path imported_seqs.qza
+
+#You'll get .qza (qiime-zipped-artifact) file as output. We can convert it to .qzv (visualization artifact) to determine quality scores and trim-trunc lengths. 
+
+qiime demux summarize \
+--i-data imported_seqs.qza \
+--o-visualization imported_seqs.qzv
+
+
+#Now, go to:  https://view.qiime2.org/  to visualize “imported_seqs.qzv”.
+
+
+
+
